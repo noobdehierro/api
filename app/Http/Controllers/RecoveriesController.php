@@ -12,7 +12,9 @@ class RecoveriesController extends Controller
      */
     public function index()
     {
-        //
+        $recoveries = recoveries::paginate(10);
+
+        return view('adminhtml.recoveries.index', compact('recoveries'));
     }
 
     /**
@@ -44,7 +46,8 @@ class RecoveriesController extends Controller
      */
     public function edit(recoveries $recoveries)
     {
-        //
+
+        return view('adminhtml.recoveries.edit', compact('recoveries'));
     }
 
     /**
@@ -52,7 +55,15 @@ class RecoveriesController extends Controller
      */
     public function update(Request $request, recoveries $recoveries)
     {
-        //
+
+        $request->validate([
+            'status' => 'required',
+        ]);
+
+        $recoveries->status = $request->status;
+        $recoveries->save();
+
+        return redirect()->route('recoveries.index')->with('success', 'Recovery updated successfully');
     }
 
     /**
@@ -60,6 +71,8 @@ class RecoveriesController extends Controller
      */
     public function destroy(recoveries $recoveries)
     {
-        //
+        $recoveries->delete();
+
+        return redirect()->route('recoveries.index')->with('success', 'Recovery deleted successfully');
     }
 }
